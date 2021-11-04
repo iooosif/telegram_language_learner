@@ -26,11 +26,14 @@ def update_lists():
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
 
+            print('открылись файлы')
+        """
             mixture_list = list(zip(list_rus, list_czech))
             random.shuffle(mixture_list)
             list_rus, list_czech = zip(*mixture_list)
             # синхронная перемешка списков
-            print('открылись файлы')
+            """
+
     # добавляем данные из файлов в листы
 
 
@@ -42,6 +45,7 @@ def start_work(message):
     mistakes = 0
     c = 0
     k = 0
+    set_errors.clear()
     update_lists()
     # обновляем все переменные до первоначального значения
     bot.send_message(message.from_user.id, 'все началось с начала')
@@ -83,12 +87,12 @@ def get_text_messages(message):
                 bot.send_message(message.from_user.id, list_rus[c])
                 # если не правильно ответили, то слова вновь добавляются в конец списков
                 # и добавляется в список ошибок
-    except :
+    except:
         # если счетчик превысил длинну списка, то выводим результаты
         if correct == 3:
             bot.send_message(message.from_user.id,
                              'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
-        if len(set_errors) > 0:
+        if mistakes != 0:
             bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
 
 
