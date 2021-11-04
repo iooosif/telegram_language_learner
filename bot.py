@@ -98,11 +98,8 @@ def get_text_messages(message):
 
 # бесконечная работа бота
 bot.polling(none_stop=True, interval=0)
-"""updater = Updater(tkn, use_context=True)
-updater.start_polling()
-updater.idle()
 
-"""
+
 """
 bot.delete_webhook()
 bot.set_webhook('https://test.com/' + tkn)"""
