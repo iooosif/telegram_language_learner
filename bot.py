@@ -38,6 +38,10 @@ def mix():
     list_rus, list_czech = zip(*mixture_list)
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
+@bot.message_handler(commands=['commands'])
+def wright_commands(message):
+    bot.send_message(message.from_user.id, 'список команд этого бота:\n /start - обновить игру и начать сначала \n /break - закончить игру \n'
+                                           '/result - выводит результаты \n /commands - выводит список команд')
 # пишет результат
 @bot.message_handler(commands=['result'])
 
