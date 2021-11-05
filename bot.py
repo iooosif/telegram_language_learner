@@ -30,7 +30,7 @@ def update_lists():
             mix()
             # добавляем данные из файлов в листы
 
-
+# синхронная перемешка списков
 def mix():
     global list_rus, list_czech
     mixture_list = list(zip(list_rus, list_czech))
@@ -38,9 +38,14 @@ def mix():
     list_rus, list_czech = zip(*mixture_list)
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
-    # синхронная перемешка списков
-
-
+# пишет результат
+@bot.message_handler(commands=['result'])
+def results(message):
+    bot.send_message(message.from_user.id,
+                     'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
+    if mistakes != 0:
+        bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
+    start_work(message)
 @bot.message_handler(commands=['start', 'break'])
 # обработчик команды старт и брейк
 def start_work(message):
@@ -54,9 +59,8 @@ def start_work(message):
     # обновляем все переменные до первоначального значения
     bot.send_message(message.from_user.id, 'все началось с начала')
 
-
-@bot.message_handler(content_types=['text'])
 # обработчик текста
+@bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     global k, c, correct, mistakes
     try:
@@ -94,10 +98,7 @@ def get_text_messages(message):
     except:
         # если счетчик превысил длинну списка, то выводим результаты
         if correct == 3:
-            bot.send_message(message.from_user.id,
-                             'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
-        if mistakes != 0:
-            bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
+            results(message)
 
 
 # бесконечная работа бота
