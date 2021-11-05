@@ -40,12 +40,16 @@ def mix():
     print(type(list_rus))
 # пишет результат
 @bot.message_handler(commands=['result'])
+
 def results(message):
-    bot.send_message(message.from_user.id,
-                     'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
-    if mistakes != 0:
-        bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
-    start_work(message)
+    try:
+        bot.send_message(message.from_user.id,
+                    'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
+        if mistakes != 0:
+            bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
+        bot.send_message(message.from_user.id, list_rus[c])
+    except:
+        start_work(message)
 @bot.message_handler(commands=['start', 'break'])
 # обработчик команды старт и брейк
 def start_work(message):
