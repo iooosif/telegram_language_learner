@@ -40,7 +40,7 @@ def mix():
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
 
-
+# выводит список команд
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
     bot.send_message(message.from_user.id,
