@@ -86,7 +86,7 @@ def get_text_messages(message):
         if k == 0:
             k += 1
             bot.send_message(message.from_user.id,
-                             'выберите словарь по которому будете заниматься (family, days')
+                             'выберите словарь по которому будете заниматься (family, days, contact')
         # выбираем словарь
         elif k == 1:
             # если первое сообщение(или после команд брейк и старт)
