@@ -21,8 +21,8 @@ set_errors = set()
 def update_lists(message):
     global list_rus, list_czech
 
-    with open('dicts/rus' + message + '.txt', 'r') as rus:
-        with open('dicts/czech' + message + '.txt', 'r') as czech:
+    with open('dicts/rus_' + message + '.txt', 'r') as rus:
+        with open('dicts/czech_' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
             print('открылись файлы')
