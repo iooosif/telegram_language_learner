@@ -104,7 +104,7 @@ def get_text_messages(message):
         elif k == 1:
             # если первое сообщение(или после команд брейк и старт)
             try:
-                update_lists(message.text)
+                update_lists(message.text.lower())
             except:
                 bot.send_message(message.from_user.id,
                                  'такого словаря нет, отправьте любой символ и попробуйте еще раз')

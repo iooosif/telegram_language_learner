@@ -1,6 +1,6 @@
 Ahoj
 Dobré ráno
-Dobré odpoledne
+dobrý den
 Dobrý večer
 Dobrou noc
 Jak se jmenujete?
