@@ -41,6 +41,7 @@ def mix():
     print(type(list_rus))
 
 
+# описание бота
 @bot.message_handler(commands=['description'])
 def description(message):
     bot.send_message(message.from_user.id, 'Этот бот должен помочь вам в изучении'
