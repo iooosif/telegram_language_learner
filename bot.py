@@ -58,7 +58,9 @@ def wright_commands(message):
                      'начать сначала \n /break - закончить игру \n'
                      '/result - выводит результаты \n /commands - выводит список команд\n'
                      '/description - выводит краткое описание бота')
-    bot.send_message(message.from_user.id, list_rus[c])
+    if c!=0:
+        bot.send_message(message.from_user.id, list_rus[c])
+
 
 
 # пишет результат
