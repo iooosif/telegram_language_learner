@@ -18,26 +18,65 @@ set_errors = set()
 # списки русских слов и чешских ,счетчик ошибок, переменная счетчик для
 # прогона по спискам, переменная для определенния какой это по счету кругу и список слов с ошибкой
 
-def update_lists():
+def update_lists(message):
     global list_rus, list_czech
 
-    with open('rus.txt', 'r') as rus:
-        with open('czech.txt', 'r') as czech:
+    with open('dicts/rus_' + message + '.txt', 'r') as rus:
+        with open('dicts/czech_' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
-
             print('открылись файлы')
-        """
-            mixture_list = list(zip(list_rus, list_czech))
-            random.shuffle(mixture_list)
-            list_rus, list_czech = zip(*mixture_list)
-            # синхронная перемешка списков
-            """
 
-    # добавляем данные из файлов в листы
+            mix()
+            # добавляем данные из файлов в листы
 
 
-@bot.message_handler(commands=['start', 'break'])
+# синхронная перемешка списков
+def mix():
+    global list_rus, list_czech
+    mixture_list = list(zip(list_rus, list_czech))
+    random.shuffle(mixture_list)
+    list_rus, list_czech = zip(*mixture_list)
+    list_rus, list_czech = list(list_rus), list(list_czech)
+    print(type(list_rus))
+
+
+# описание бота
+@bot.message_handler(commands=['description'])
+def description(message):
+    bot.send_message(message.from_user.id, 'Этот бот должен помочь вам в изучении'
+                                           'чешского языка,\n просто ежедневно проходите '
+                                           'тест по интересующей вас лексике.\n'
+                                           'Желаем вам приятного изучения языка!')
+
+
+# выводит список команд
+@bot.message_handler(commands=['commands'])
+def wright_commands(message):
+    bot.send_message(message.from_user.id,
+                     'список команд этого бота:\n /restart - обновить игру и '
+                     'начать сначала \n /break - закончить игру \n'
+                     '/result - выводит результаты \n /commands - выводит список команд\n'
+                     '/description - выводит краткое описание бота')
+    if c!=0:
+        bot.send_message(message.from_user.id, list_rus[c])
+
+
+
+# пишет результат
+@bot.message_handler(commands=['result'])
+def results(message):
+    try:
+        bot.send_message(message.from_user.id,
+                         'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
+        if mistakes != 0:
+            bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
+
+    except:
+        start_work(message)
+
+
+@bot.message_handler(commands=['restart', 'break'])
 # обработчик команды старт и брейк
 def start_work(message):
     global k, c, correct, mistakes
@@ -46,27 +85,38 @@ def start_work(message):
     c = 0
     k = 0
     set_errors.clear()
-    update_lists()
+
     # обновляем все переменные до первоначального значения
     bot.send_message(message.from_user.id, 'все началось с начала')
 
 
-@bot.message_handler(content_types=['text'])
 # обработчик текста
+@bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     global k, c, correct, mistakes
     try:
         # проверяем на превышение счетчика длины словоря
         if k == 0:
+            k += 1
+            bot.send_message(message.from_user.id,
+                             'выберите словарь по которому будете заниматься (family, days, contact, thanks)')
+        # выбираем словарь
+        elif k == 1:
             # если первое сообщение(или после команд брейк и старт)
-            update_lists()
+            try:
+                update_lists(message.text)
+            except:
+                bot.send_message(message.from_user.id,
+                                 'такого словаря нет, отправьте любой символ и попробуйте еще раз')
+                k = -1
+
             k += 1
             bot.send_message(message.from_user.id, list_rus[c])
             print('начало просмотра ')
 
         else:
 
-            if (message.text == list_czech[c][:-1]) or (message.text == list_czech[c]):
+            if (message.text.lower() == list_czech[c][:-1].lower()) or (message.text.lower() == list_czech[c].lower()):
 
                 bot.send_message(message.from_user.id, 'правильно')
 
@@ -90,15 +140,11 @@ def get_text_messages(message):
     except:
         # если счетчик превысил длинну списка, то выводим результаты
         if correct == 3:
-            bot.send_message(message.from_user.id,
-                             'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
-        if mistakes != 0:
-            bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
+            results(message)
 
 
 # бесконечная работа бота
 bot.polling(none_stop=True, interval=0)
-
 
 """
 bot.delete_webhook()

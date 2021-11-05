@@ -1,0 +1,19 @@
+Matka
+Otec
+Bratr
+Sestra
+Syn
+Dcera
+Rodiče
+Děti
+Dítě
+Nevlastní matka
+Nevlastní otec
+Nevlastní sestra
+Nevlastní bratr
+Syn
+Dcera
+Manželka
+Manžel
+Mami
+Táto
