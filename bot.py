@@ -41,12 +41,21 @@ def mix():
     print(type(list_rus))
 
 
+@bot.message_handler(commands=['description'])
+def description(message):
+    bot.send_message(message.from_user.id, 'Этот бот должен помочь вам в изучении'
+                                           'чешского языка,\n просто ужидневно проходите '
+                                           'тест по интересующей вас лексике.\n'
+                                           'Желаем вам приятного изучения языка!')
+
+
 # выводит список команд
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
     bot.send_message(message.from_user.id,
                      'список команд этого бота:\n /restart - обновить игру и начать сначала \n /break - закончить игру \n'
-                     '/result - выводит результаты \n /commands - выводит список команд')
+                     '/result - выводит результаты \n /commands - выводит список команд\n'
+                     '/description - выводит краткое описание бота')
     bot.send_message(message.from_user.id, list_rus[c])
 
 
