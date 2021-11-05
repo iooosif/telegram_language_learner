@@ -18,11 +18,11 @@ set_errors = set()
 # списки русских слов и чешских ,счетчик ошибок, переменная счетчик для
 # прогона по спискам, переменная для определенния какой это по счету кругу и список слов с ошибкой
 
-def update_lists():
+def update_lists(message):
     global list_rus, list_czech
 
-    with open('rus.txt', 'r') as rus:
-        with open('czech.txt', 'r') as czech:
+    with open('rus' + message + '.txt', 'r') as rus:
+        with open('czech' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
             print('открылись файлы')
@@ -40,12 +40,14 @@ def mix():
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
 
+
 # выводит список команд
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
     bot.send_message(message.from_user.id,
                      'список команд этого бота:\n /start - обновить игру и начать сначала \n /break - закончить игру \n'
                      '/result - выводит результаты \n /commands - выводит список команд')
+    bot.send_message(message.from_user.id, list_rus[c])
 
 
 # пишет результат
@@ -70,7 +72,7 @@ def start_work(message):
     c = 0
     k = 0
     set_errors.clear()
-    update_lists()
+
     # обновляем все переменные до первоначального значения
     bot.send_message(message.from_user.id, 'все началось с начала')
 
@@ -82,8 +84,19 @@ def get_text_messages(message):
     try:
         # проверяем на превышение счетчика длины словоря
         if k == 0:
+            k += 1
+            bot.send_message(message.from_user.id,
+                             'выберите словарь по которому будете заниматься (fruits, animals, days')
+        # выбираем словарь
+        elif k == 1:
             # если первое сообщение(или после команд брейк и старт)
-            update_lists()
+            try:
+                update_lists(message.text)
+            except:
+                bot.send_message(message.from_user.id,
+                                 'такого словаря нет, отправьте любой символ и попробуйте еще раз')
+
+                k = -1
             k += 1
             bot.send_message(message.from_user.id, list_rus[c])
             print('начало просмотра ')
