@@ -21,8 +21,8 @@ set_errors = set()
 def update_lists(message):
     global list_rus, list_czech
 
-    with open('rus' + message + '.txt', 'r') as rus:
-        with open('czech' + message + '.txt', 'r') as czech:
+    with open('dicts/rus' + message + '.txt', 'r') as rus:
+        with open('dicts/czech' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
             print('открылись файлы')
@@ -103,7 +103,7 @@ def get_text_messages(message):
 
         else:
 
-            if (message.text == list_czech[c][:-1]) or (message.text == list_czech[c]):
+            if (message.text.lower() == list_czech[c][:-1].lower()) or (message.text.lower() == list_czech[c].lower()):
 
                 bot.send_message(message.from_user.id, 'правильно')
 
