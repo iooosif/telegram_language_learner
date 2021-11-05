@@ -45,7 +45,7 @@ def mix():
 @bot.message_handler(commands=['description'])
 def description(message):
     bot.send_message(message.from_user.id, 'Этот бот должен помочь вам в изучении'
-                                           'чешского языка,\n просто ужидневно проходите '
+                                           'чешского языка,\n просто ежедневно проходите '
                                            'тест по интересующей вас лексике.\n'
                                            'Желаем вам приятного изучения языка!')
 
@@ -54,7 +54,8 @@ def description(message):
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
     bot.send_message(message.from_user.id,
-                     'список команд этого бота:\n /restart - обновить игру и начать сначала \n /break - закончить игру \n'
+                     'список команд этого бота:\n /restart - обновить игру и '
+                     'начать сначала \n /break - закончить игру \n'
                      '/result - выводит результаты \n /commands - выводит список команд\n'
                      '/description - выводит краткое описание бота')
     bot.send_message(message.from_user.id, list_rus[c])
