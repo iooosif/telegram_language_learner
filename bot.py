@@ -25,16 +25,20 @@ def update_lists():
         with open('czech.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
-
             print('открылись файлы')
-        """
-            mixture_list = list(zip(list_rus, list_czech))
-            random.shuffle(mixture_list)
-            list_rus, list_czech = zip(*mixture_list)
-            # синхронная перемешка списков
-            """
 
-    # добавляем данные из файлов в листы
+            mix()
+            # добавляем данные из файлов в листы
+
+
+def mix():
+    global list_rus, list_czech
+    mixture_list = list(zip(list_rus, list_czech))
+    random.shuffle(mixture_list)
+    list_rus, list_czech = zip(*mixture_list)
+    list_rus, list_czech = list(list_rus), list(list_czech)
+    print(type(list_rus))
+    # синхронная перемешка списков
 
 
 @bot.message_handler(commands=['start', 'break'])
@@ -98,7 +102,6 @@ def get_text_messages(message):
 
 # бесконечная работа бота
 bot.polling(none_stop=True, interval=0)
-
 
 """
 bot.delete_webhook()
