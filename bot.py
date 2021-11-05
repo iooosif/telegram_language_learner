@@ -45,7 +45,7 @@ def mix():
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
     bot.send_message(message.from_user.id,
-                     'список команд этого бота:\n /start - обновить игру и начать сначала \n /break - закончить игру \n'
+                     'список команд этого бота:\n /restart - обновить игру и начать сначала \n /break - закончить игру \n'
                      '/result - выводит результаты \n /commands - выводит список команд')
     bot.send_message(message.from_user.id, list_rus[c])
 
@@ -63,7 +63,7 @@ def results(message):
         start_work(message)
 
 
-@bot.message_handler(commands=['start', 'break'])
+@bot.message_handler(commands=['restart', 'break'])
 # обработчик команды старт и брейк
 def start_work(message):
     global k, c, correct, mistakes
@@ -86,7 +86,7 @@ def get_text_messages(message):
         if k == 0:
             k += 1
             bot.send_message(message.from_user.id,
-                             'выберите словарь по которому будете заниматься (family, days, contact')
+                             'выберите словарь по которому будете заниматься (family, days, contact, thanks)')
         # выбираем словарь
         elif k == 1:
             # если первое сообщение(или после команд брейк и старт)
@@ -95,8 +95,8 @@ def get_text_messages(message):
             except:
                 bot.send_message(message.from_user.id,
                                  'такого словаря нет, отправьте любой символ и попробуйте еще раз')
-
                 k = -1
+
             k += 1
             bot.send_message(message.from_user.id, list_rus[c])
             print('начало просмотра ')
