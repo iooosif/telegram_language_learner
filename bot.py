@@ -13,20 +13,20 @@ k = 0
 list_rus = []
 list_czech = []
 set_errors = set()
-
+base_len_list = 0
 
 # списки русских слов и чешских ,счетчик ошибок, переменная счетчик для
 # прогона по спискам, переменная для определенния какой это по счету кругу и список слов с ошибкой
 
 def update_lists(message):
-    global list_rus, list_czech
+    global list_rus, list_czech, base_len_list
 
     with open('dicts/rus_' + message + '.txt', 'r') as rus:
         with open('dicts/czech_' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
             print('открылись файлы')
-
+            base_len_list = len(list_rus)
             mix()
             # добавляем данные из файлов в листы
 
@@ -58,9 +58,8 @@ def wright_commands(message):
                      'начать сначала \n /break - закончить игру \n'
                      '/result - выводит результаты \n /commands - выводит список команд\n'
                      '/description - выводит краткое описание бота')
-    if c!=0:
+    if c != 0:
         bot.send_message(message.from_user.id, list_rus[c])
-
 
 
 # пишет результат
@@ -74,6 +73,7 @@ def results(message):
 
     except:
         start_work(message)
+    bot.send_message(message.from_user.id, 'чтобы начать сначала, введите команду /restart')
 
 
 @bot.message_handler(commands=['restart', 'break'])
@@ -139,7 +139,7 @@ def get_text_messages(message):
                 # и добавляется в список ошибок
     except:
         # если счетчик превысил длинну списка, то выводим результаты
-        if correct == 3:
+        if correct == base_len_list:
             results(message)
 
 
