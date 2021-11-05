@@ -1,0 +1,12 @@
+Dny v týdnu
+Pondělí
+Úterý
+Středa
+Čtvrtek
+Pátek
+Sobota
+Neděle
+Den
+Týden
+Víkend
+hezký víkend
