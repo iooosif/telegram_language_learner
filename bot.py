@@ -30,6 +30,7 @@ def update_lists():
             mix()
             # добавляем данные из файлов в листы
 
+
 # синхронная перемешка списков
 def mix():
     global list_rus, list_czech
@@ -38,22 +39,28 @@ def mix():
     list_rus, list_czech = zip(*mixture_list)
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
+
+
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
-    bot.send_message(message.from_user.id, 'список команд этого бота:\n /start - обновить игру и начать сначала \n /break - закончить игру \n'
-                                           '/result - выводит результаты \n /commands - выводит список команд')
+    bot.send_message(message.from_user.id,
+                     'список команд этого бота:\n /start - обновить игру и начать сначала \n /break - закончить игру \n'
+                     '/result - выводит результаты \n /commands - выводит список команд')
+
+
 # пишет результат
 @bot.message_handler(commands=['result'])
-
 def results(message):
     try:
         bot.send_message(message.from_user.id,
-                    'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
+                         'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
         if mistakes != 0:
             bot.send_message(message.from_user.id, 'вы допустили ошибки в этих словах {0}'.format(set_errors))
         bot.send_message(message.from_user.id, list_rus[c])
     except:
         start_work(message)
+
+
 @bot.message_handler(commands=['start', 'break'])
 # обработчик команды старт и брейк
 def start_work(message):
@@ -66,6 +73,7 @@ def start_work(message):
     update_lists()
     # обновляем все переменные до первоначального значения
     bot.send_message(message.from_user.id, 'все началось с начала')
+
 
 # обработчик текста
 @bot.message_handler(content_types=['text'])
