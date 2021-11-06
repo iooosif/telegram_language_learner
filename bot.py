@@ -1,4 +1,5 @@
 import random
+import tg_analytic
 
 import telebot
 
@@ -13,23 +14,37 @@ k = 0
 list_rus = []
 list_czech = []
 set_errors = set()
+base_len_list = 0
 
 
 # списки русских слов и чешских ,счетчик ошибок, переменная счетчик для
 # прогона по спискам, переменная для определенния какой это по счету кругу и список слов с ошибкой
 
 def update_lists(message):
-    global list_rus, list_czech
+    global list_rus, list_czech, base_len_list
 
     with open('dicts/rus_' + message + '.txt', 'r') as rus:
         with open('dicts/czech_' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
             print('открылись файлы')
-
+            base_len_list = len(list_rus)
             mix()
             # добавляем данные из файлов в листы
 
+
+def add_markup(message):
+    markup = telebot.types.InlineKeyboardMarkup()
+
+    markup.add(telebot.types.InlineKeyboardButton(text='contact', callback_data='contact'))
+    markup.add(telebot.types.InlineKeyboardButton(text='days', callback_data='days'))
+    markup.add(telebot.types.InlineKeyboardButton(text='family', callback_data='family'))
+    markup.add(telebot.types.InlineKeyboardButton(text='thanks', callback_data='thanks'))
+    markup.add(telebot.types.InlineKeyboardButton(text='numbers(0,20)', callback_data='numbers(0,20)'))
+    bot.send_message(message.chat.id, text='выберите словарь по которому будете заниматься ', reply_markup=markup)
+
+
+# добавляем клавиатуру выбора списков
 
 # синхронная перемешка списков
 def mix():
@@ -39,6 +54,11 @@ def mix():
     list_rus, list_czech = zip(*mixture_list)
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
+
+
+@bot.message_handler(commands=['start'])
+def id_analytic(message):
+    tg_analytic.statistics(message.chat.id)
 
 
 # описание бота
@@ -58,9 +78,8 @@ def wright_commands(message):
                      'начать сначала \n /break - закончить игру \n'
                      '/result - выводит результаты \n /commands - выводит список команд\n'
                      '/description - выводит краткое описание бота')
-    if c!=0:
+    if c != 0:
         bot.send_message(message.from_user.id, list_rus[c])
-
 
 
 # пишет результат
@@ -74,12 +93,14 @@ def results(message):
 
     except:
         start_work(message)
+    bot.send_message(message.from_user.id, 'чтобы начать сначала, введите команду /restart')
 
 
 @bot.message_handler(commands=['restart', 'break'])
 # обработчик команды старт и брейк
 def start_work(message):
     global k, c, correct, mistakes
+
     correct = 0
     mistakes = 0
     c = 0
@@ -94,25 +115,23 @@ def start_work(message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     global k, c, correct, mistakes
+
     try:
         # проверяем на превышение счетчика длины словоря
         if k == 0:
-            k += 1
-            bot.send_message(message.from_user.id,
-                             'выберите словарь по которому будете заниматься (family, days, contact, thanks)')
-        # выбираем словарь
-        elif k == 1:
+
+            add_markup(message)
+
+            # выбираем словарь
             # если первое сообщение(или после команд брейк и старт)
-            try:
-                update_lists(message.text)
-            except:
-                bot.send_message(message.from_user.id,
-                                 'такого словаря нет, отправьте любой символ и попробуйте еще раз')
-                k = -1
+            @bot.callback_query_handler(func=lambda call: True)
+            def query_handler(call):
+
+                update_lists(call.data)
+                bot.send_message(message.from_user.id, list_rus[c])
 
             k += 1
-            bot.send_message(message.from_user.id, list_rus[c])
-            print('начало просмотра ')
+
 
         else:
 
@@ -139,7 +158,7 @@ def get_text_messages(message):
                 # и добавляется в список ошибок
     except:
         # если счетчик превысил длинну списка, то выводим результаты
-        if correct == 3:
+        if correct == base_len_list:
             results(message)
 
 
@@ -149,3 +168,4 @@ bot.polling(none_stop=True, interval=0)
 """
 bot.delete_webhook()
 bot.set_webhook('https://test.com/' + tkn)"""
+# беспрерывной доступ к телеграм апи
