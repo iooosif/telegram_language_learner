@@ -40,6 +40,7 @@ def add_markup(message):
     markup.add(telebot.types.InlineKeyboardButton(text='days', callback_data='days'))
     markup.add(telebot.types.InlineKeyboardButton(text='family', callback_data='family'))
     markup.add(telebot.types.InlineKeyboardButton(text='thanks', callback_data='thanks'))
+    markup.add(telebot.types.InlineKeyboardButton(text='numbers(0,20)', callback_data='numbers(0,20)'))
     bot.send_message(message.chat.id, text='выберите словарь по которому будете заниматься ', reply_markup=markup)
 
 
