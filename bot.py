@@ -1,4 +1,5 @@
 import random
+import tg_analytic
 
 import telebot
 
@@ -41,9 +42,11 @@ def mix():
     print(type(list_rus))
 
 
+
 # описание бота
 @bot.message_handler(commands=['description'])
 def description(message):
+    tg_analytic.statistics(message.chat.id)
     bot.send_message(message.from_user.id, 'Этот бот должен помочь вам в изучении'
                                            'чешского языка,\n просто ежедневно проходите '
                                            'тест по интересующей вас лексике.\n'
@@ -53,6 +56,7 @@ def description(message):
 # выводит список команд
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
+    tg_analytic.statistics(message.chat.id)
     bot.send_message(message.from_user.id,
                      'список команд этого бота:\n /restart - обновить игру и '
                      'начать сначала \n /break - закончить игру \n'
@@ -65,6 +69,7 @@ def wright_commands(message):
 # пишет результат
 @bot.message_handler(commands=['result'])
 def results(message):
+    tg_analytic.statistics(message.chat.id)
     try:
         bot.send_message(message.from_user.id,
                          'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
@@ -80,6 +85,7 @@ def results(message):
 # обработчик команды старт и брейк
 def start_work(message):
     global k, c, correct, mistakes
+    tg_analytic.statistics(message.chat.id)
     correct = 0
     mistakes = 0
     c = 0
@@ -94,6 +100,7 @@ def start_work(message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     global k, c, correct, mistakes
+    tg_analytic.statistics(message.chat.id)
     try:
         # проверяем на превышение счетчика длины словоря
         if k == 0:
@@ -149,3 +156,4 @@ bot.polling(none_stop=True, interval=0)
 """
 bot.delete_webhook()
 bot.set_webhook('https://test.com/' + tkn)"""
+# беспрерывной доступ к телеграм апи
