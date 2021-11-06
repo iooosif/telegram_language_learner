@@ -41,12 +41,14 @@ def mix():
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
 
-
-
+@bot.message_handler(commands=['start'])
+def id_analytic(message):
+    tg_analytic.statistics(message.chat.id)
+    bot.send_message(message.from_user.id, 'для начала отправьте любой символ ')
 # описание бота
 @bot.message_handler(commands=['description'])
 def description(message):
-    tg_analytic.statistics(message.chat.id)
+
     bot.send_message(message.from_user.id, 'Этот бот должен помочь вам в изучении'
                                            'чешского языка,\n просто ежедневно проходите '
                                            'тест по интересующей вас лексике.\n'
@@ -56,7 +58,7 @@ def description(message):
 # выводит список команд
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
-    tg_analytic.statistics(message.chat.id)
+
     bot.send_message(message.from_user.id,
                      'список команд этого бота:\n /restart - обновить игру и '
                      'начать сначала \n /break - закончить игру \n'
@@ -69,7 +71,7 @@ def wright_commands(message):
 # пишет результат
 @bot.message_handler(commands=['result'])
 def results(message):
-    tg_analytic.statistics(message.chat.id)
+
     try:
         bot.send_message(message.from_user.id,
                          'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
@@ -85,7 +87,7 @@ def results(message):
 # обработчик команды старт и брейк
 def start_work(message):
     global k, c, correct, mistakes
-    tg_analytic.statistics(message.chat.id)
+
     correct = 0
     mistakes = 0
     c = 0
@@ -100,7 +102,7 @@ def start_work(message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     global k, c, correct, mistakes
-    tg_analytic.statistics(message.chat.id)
+
     try:
         # проверяем на превышение счетчика длины словоря
         if k == 0:
@@ -115,7 +117,8 @@ def get_text_messages(message):
             except:
                 bot.send_message(message.from_user.id,
                                  'такого словаря нет, отправьте любой символ и попробуйте еще раз')
-                k = -1
+                k = 0
+                return 0
 
             k += 1
             bot.send_message(message.from_user.id, list_rus[c])
