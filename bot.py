@@ -131,8 +131,7 @@ def get_text_messages(message):
                 bot.send_message(message.from_user.id, list_rus[c])
 
             k += 1
-            bot.send_message(message.from_user.id, list_rus[c])
-            print('начало просмотра ')
+
 
         else:
 
