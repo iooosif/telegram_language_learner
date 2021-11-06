@@ -16,6 +16,7 @@ list_czech = []
 set_errors = set()
 base_len_list = 0
 
+
 # списки русских слов и чешских ,счетчик ошибок, переменная счетчик для
 # прогона по спискам, переменная для определенния какой это по счету кругу и список слов с ошибкой
 
@@ -32,6 +33,18 @@ def update_lists(message):
             # добавляем данные из файлов в листы
 
 
+def add_markup(message):
+    markup = telebot.types.InlineKeyboardMarkup()
+
+    markup.add(telebot.types.InlineKeyboardButton(text='contact', callback_data='contact'))
+    markup.add(telebot.types.InlineKeyboardButton(text='days', callback_data='days'))
+    markup.add(telebot.types.InlineKeyboardButton(text='family', callback_data='family'))
+    markup.add(telebot.types.InlineKeyboardButton(text='thanks', callback_data='thanks'))
+    bot.send_message(message.chat.id, text='выберите словарь по которому будете заниматься ', reply_markup=markup)
+
+
+# добавляем клавиатуру выбора списков
+
 # синхронная перемешка списков
 def mix():
     global list_rus, list_czech
@@ -41,14 +54,15 @@ def mix():
     list_rus, list_czech = list(list_rus), list(list_czech)
     print(type(list_rus))
 
+
 @bot.message_handler(commands=['start'])
 def id_analytic(message):
     tg_analytic.statistics(message.chat.id)
-    bot.send_message(message.from_user.id, 'для начала отправьте любой символ ')
+
+
 # описание бота
 @bot.message_handler(commands=['description'])
 def description(message):
-
     bot.send_message(message.from_user.id, 'Этот бот должен помочь вам в изучении'
                                            'чешского языка,\n просто ежедневно проходите '
                                            'тест по интересующей вас лексике.\n'
@@ -58,7 +72,6 @@ def description(message):
 # выводит список команд
 @bot.message_handler(commands=['commands'])
 def wright_commands(message):
-
     bot.send_message(message.from_user.id,
                      'список команд этого бота:\n /restart - обновить игру и '
                      'начать сначала \n /break - закончить игру \n'
@@ -71,7 +84,6 @@ def wright_commands(message):
 # пишет результат
 @bot.message_handler(commands=['result'])
 def results(message):
-
     try:
         bot.send_message(message.from_user.id,
                          'вы набрали {0} правильных и {1} неправильных'.format(correct, mistakes))
@@ -106,19 +118,16 @@ def get_text_messages(message):
     try:
         # проверяем на превышение счетчика длины словоря
         if k == 0:
-            k += 1
-            bot.send_message(message.from_user.id,
-                             'выберите словарь по которому будете заниматься (family, days, contact, thanks)')
-        # выбираем словарь
-        elif k == 1:
+
+            add_markup(message)
+
+            # выбираем словарь
             # если первое сообщение(или после команд брейк и старт)
-            try:
-                update_lists(message.text.lower())
-            except:
-                bot.send_message(message.from_user.id,
-                                 'такого словаря нет, отправьте любой символ и попробуйте еще раз')
-                k = 0
-                return 0
+            @bot.callback_query_handler(func=lambda call: True)
+            def query_handler(call):
+
+                update_lists(call.data)
+                bot.send_message(message.from_user.id, list_rus[c])
 
             k += 1
             bot.send_message(message.from_user.id, list_rus[c])
