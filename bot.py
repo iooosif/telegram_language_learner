@@ -65,7 +65,20 @@ def mix():
 @bot.message_handler(commands=['start'])
 def id_analytic(message):
     tg_analytic.statistics(message.chat.id)
+#вывод списка слов целиком
+"""
+@bot.message_handler(commands=['words'])
+def get_text(message):
 
+    add_markup(message)
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def queryhandler(call):
+        update_lists(call.data)
+        bot.send_message(message.from_user.id, '{0}'.format(base_list)[1:-1])
+        bot.send_message(message.from_user.id, list_rus[c])
+        base_list.clear()
+"""
 
 # описание бота
 @bot.message_handler(commands=['description'])
@@ -115,17 +128,6 @@ def start_work(message):
 
     # обновляем все переменные до первоначального значения
     bot.send_message(message.from_user.id, 'все началось с начала')
-#вывод списка слов целиком
-@bot.message_handler(commands=['words'])
-def get_text(message):
-
-    add_markup(message)
-
-    @bot.callback_query_handler(func=lambda call: True)
-    def queryhandler(call):
-        update_lists(call.data)
-        bot.send_message(message.from_user.id, '{0}'.format(base_list)[1:-1])
-        base_list.clear()
 
 # обработчик текста
 @bot.message_handler(content_types=['text'])
@@ -176,7 +178,7 @@ def get_text_messages(message):
         # если счетчик превысил длинну списка, то выводим результаты
         if correct == base_len_list:
             results(message)
-
+#вывод списка слов целиком
 
 # бесконечная работа бота
 bot.polling(none_stop=True, interval=0)
