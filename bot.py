@@ -16,7 +16,7 @@ list_czech = []
 set_errors = set()
 base_len_list = 0
 
-
+base_list = []
 # списки русских слов и чешских ,счетчик ошибок, переменная счетчик для
 # прогона по спискам, переменная для определенния какой это по счету кругу и список слов с ошибкой
 
@@ -27,9 +27,10 @@ def update_lists(message):
         with open('dicts/czech_' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
-            base_list = []
+
             for q in range(len(list_rus) - 1):
-                base_list.append('{0} : {1}\n'.format(list_rus[q].replace('\n', ''), list_czech[q].replace('\n', '')))
+                base_list.append('{0} : {1}'.format(list_rus[q].replace('\n', ''), list_czech[q].replace('\n', '')))
+
             print('открылись файлы')
             base_len_list = len(list_rus)
             mix()
@@ -44,7 +45,7 @@ def add_markup(message):
     markup.add(telebot.types.InlineKeyboardButton(text='family', callback_data='family'))
     markup.add(telebot.types.InlineKeyboardButton(text='thanks', callback_data='thanks'))
     markup.add(telebot.types.InlineKeyboardButton(text='numbers(0,20)', callback_data='numbers(0,20)'))
-    bot.send_message(message.chat.id, text='выберите словарь по которому будете заниматься ', reply_markup=markup)
+    bot.send_message(message.chat.id, text='выберите словарь  ', reply_markup=markup)
 
 
 # добавляем клавиатуру выбора списков
@@ -114,7 +115,17 @@ def start_work(message):
 
     # обновляем все переменные до первоначального значения
     bot.send_message(message.from_user.id, 'все началось с начала')
+#вывод списка слов целиком
+@bot.message_handler(commands=['words'])
+def get_text(message):
 
+    add_markup(message)
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def queryhandler(call):
+        update_lists(call.data)
+        bot.send_message(message.from_user.id, '{0}'.format(base_list)[1:-1])
+        base_list.clear()
 
 # обработчик текста
 @bot.message_handler(content_types=['text'])
