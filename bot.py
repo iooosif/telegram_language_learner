@@ -27,6 +27,9 @@ def update_lists(message):
         with open('dicts/czech_' + message + '.txt', 'r') as czech:
             list_rus = [i for i in rus]
             list_czech = [j for j in czech]
+            base_list = []
+            for q in range(len(list_rus) - 1):
+                base_list.append('{0} : {1}\n'.format(list_rus[q].replace('\n', ''), list_czech[q].replace('\n', '')))
             print('открылись файлы')
             base_len_list = len(list_rus)
             mix()
@@ -53,9 +56,11 @@ def mix():
     random.shuffle(mixture_list)
     list_rus, list_czech = zip(*mixture_list)
     list_rus, list_czech = list(list_rus), list(list_czech)
+
     print(type(list_rus))
 
 
+# добавление id пользователя
 @bot.message_handler(commands=['start'])
 def id_analytic(message):
     tg_analytic.statistics(message.chat.id)
